@@ -14,6 +14,14 @@ def call(String version, String branch_from) {
   git clone git@github.com:puppetlabs/${GITHUB_PROJECT} ./${GITHUB_PROJECT}
   cd ${GITHUB_PROJECT}
 
+  git ls-remote | grep "${version}"-release
+
+  if [[ ( "$?" == 0 ) ]]
+  then
+    echo "${version}-release branch already exists. Exiting release creation."
+    exit 1
+  fi
+
   if [ -z \"$branch_from\" ]
   then
     FAMILY=`echo ${version} | sed \"s/\\(.*\\..*\\)\\..*/\\1/\"`
